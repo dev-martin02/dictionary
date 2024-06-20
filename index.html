@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <title>Vite + TS</title>
+</head>
+
+<body class="d-flex flex-column justify-content-center align-items-center">
+  <!-- Header Bar -->
+  <header class="d-flex justify-content-center mb-5 mt-5 w-100">
+    <div class="d-flex justify-content-between w-100">
+      <img src="./public/book.svg" alt="bookIcon">
+      <div>
+        <img src="./public/moon.svg" alt="moonIcon">
+      </div>
+    </div>
+  </header>
+
+  <!-- Input Bar -->
+  <div class="input-group flex justify-content-center p-1">
+    <button class="input-group-text" id="searchBtn"> <img src="./public/searchIcon.svg" alt="Search_Icon"></button>
+    <input type="text" class="form-control" placeholder="Search for a word">
+  </div>
+
+  <!-- Word content -->
+  <main class="w-100 p-2">
+
+    <section class="m-3">
+      <h2 class="text-start fs-1" id="wordName">World</h2>
+
+      <!-- Word Pronunciation -->
+      <div id="word_pronunciation" class="d-flex align-items-center">
+        <button class="btn text-align">
+          <img src="./public/speaker.svg" class="small-icon" alt="speaker_Icon">
+        </button>
+        <span>Pronunciation</span>
+      </div>
+
+      <!-- Word Usage -->
+      <nav id="wordUsage" class="d-flex gap-3 mt-3">
+        <button class="fs-4 btn">noun</button>
+        <button class="fs-4 btn">verb</button>
+        <button class="fs-4 btn">synonyms</button>
+      </nav>
+
+      <!-- Word Content Sections -->
+      <section id="content">
+        <ul id='noun_list' class="display_section">
+          <li>word</li>
+          <li>word</li>
+          <li>word</li>
+        </ul>
+
+        <ul id='verb_list' class="no_display">
+          <li>verb</li>
+          <li>verb</li>
+          <li>verb</li>
+        </ul>
+
+        <ul id='synonyms_list' class="no_display">
+          <li>synonyms</li>
+          <li>synonyms</li>
+          <li>synonyms</li>
+        </ul>
+      </section>
+
+    </section>
+
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
