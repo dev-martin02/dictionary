@@ -1,5 +1,6 @@
 const wordOfUsageNavBar = document.querySelector("nav") as HTMLElement;
 const api = "https://api.dictionaryapi.dev/api/v2/entries/en/"; // + yourWord;
+const contentSection = document.getElementById("content") as HTMLElement;
 
 if (wordOfUsageNavBar) {
   // Add class or remove Class if button was clicked
@@ -14,9 +15,6 @@ if (wordOfUsageNavBar) {
   }
 
   function displayContentSection(clickedButton: HTMLButtonElement) {
-    const contentSection = document.getElementById(
-      "content"
-    ) as HTMLElement | null;
     if (!contentSection) {
       console.error("Content section not found");
       return;
@@ -59,6 +57,7 @@ async function searchWord(userWord: String): Promise<any[] | object> {
       return data;
     }
 
+    console.log(data);
     return data;
   } catch (error: unknown) {
     console.error(error);
@@ -71,6 +70,34 @@ function capitalizeFirstLetter(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+function addNavigationLinks(arr: []) {
+  wordOfUsageNavBar.replaceChildren();
+  return arr.forEach(({ partOfSpeech, definitions }) => {
+    const newButtonElement = document.createElement("button");
+    newButtonElement.textContent = partOfSpeech;
+    const buttonStyle = ["fs-4", "btn"];
+    newButtonElement.classList.add(...buttonStyle);
+
+    wordOfUsageNavBar.appendChild(newButtonElement);
+    addContentSection(definitions, partOfSpeech);
+  });
+}
+
+// bug -> multiple OL elements get created when search different words
+function addContentSection(arr: [], partOfSpeech: string) {
+  const newOlElement = document.createElement("ol");
+  newOlElement.id = `${partOfSpeech}_list`;
+  newOlElement.classList.add("no_display");
+
+  arr.forEach(({ definition }) => {
+    const newLiElement = document.createElement("li");
+    newLiElement.innerText = definition;
+    newOlElement.appendChild(newLiElement);
+  });
+
+  return contentSection.appendChild(newOlElement);
+}
+
 //Interact with the content sections
 const searchWordBtn = document.getElementById("searchBtn") as HTMLButtonElement;
 searchWordBtn.addEventListener("click", async () => {
@@ -78,14 +105,22 @@ searchWordBtn.addEventListener("click", async () => {
   const userWord = await searchWord(inputBarElement.value);
 
   if (Array.isArray(userWord)) {
+    const { word, phonetic, meanings } = userWord[0];
+
     const wordTitleElement = document.getElementById("wordName") as HTMLElement;
-    wordTitleElement.innerText = capitalizeFirstLetter(userWord[0].word);
+    wordTitleElement.innerText = capitalizeFirstLetter(word);
+
+    const wordPronunciation = document.getElementById(
+      "word_pronunciation"
+    ) as HTMLElement;
+    wordPronunciation.innerText = phonetic;
+    addNavigationLinks(meanings);
   }
 });
 
 /*
   Task 
    - Better interaction with Errors 
-   - Add audio functionality 
-
+   - Add audio functionality
+   - Add new section where it will tell the user to search for a word
 */
