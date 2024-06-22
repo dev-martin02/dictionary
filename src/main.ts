@@ -7,6 +7,7 @@ if (wordOfUsageNavBar) {
   function btnContentState(clickedButton: HTMLButtonElement) {
     Array.from(wordOfUsageNavBar.children).forEach((child) => {
       if (child === clickedButton) {
+        contentSection.classList.add("content-box");
         child.classList.add("active");
       } else {
         child.classList.remove("active");
@@ -16,7 +17,6 @@ if (wordOfUsageNavBar) {
 
   function displayContentSection(clickedButton: HTMLButtonElement) {
     if (!contentSection) {
-      console.error("Content section not found");
       return;
     }
     const targetSectionId = `${clickedButton.innerText}_list`;
@@ -83,7 +83,6 @@ function addNavigationLinks(arr: []) {
   });
 }
 
-// bug -> multiple OL elements get created when search different words
 function addContentSection(arr: [], partOfSpeech: string) {
   const newOlElement = document.createElement("ol");
   newOlElement.id = `${partOfSpeech}_list`;
@@ -104,8 +103,17 @@ searchWordBtn.addEventListener("click", async () => {
   const inputBarElement = document.querySelector("input") as HTMLInputElement;
   const userWord = await searchWord(inputBarElement.value);
 
+  // Check and delete old Ol tags to avoid repetition
+  const oldOlElement = document.querySelectorAll("ol");
+  if (oldOlElement) {
+    oldOlElement.forEach((ol) => {
+      ol.remove();
+    });
+  }
+
+  // userWord is an Array means the word was found it in the API
   if (Array.isArray(userWord)) {
-    const { word, phonetic, meanings } = userWord[0];
+    const { word, phonetic, meanings, phonetics } = userWord[0];
 
     const wordTitleElement = document.getElementById("wordName") as HTMLElement;
     wordTitleElement.innerText = capitalizeFirstLetter(word);
@@ -115,12 +123,44 @@ searchWordBtn.addEventListener("click", async () => {
     ) as HTMLElement;
     wordPronunciation.innerText = phonetic;
     addNavigationLinks(meanings);
+    playPronunciationAudio(phonetics);
   }
 });
+
+//Tell typeScript how the array content would look like
+interface Phonetic {
+  audio: string;
+}
+
+function playPronunciationAudio(phonetics: Phonetic[]) {
+  const audioBtn = document.getElementById(
+    "play_audio_btn"
+  ) as HTMLButtonElement | null;
+
+  if (!audioBtn) {
+    console.error("Audio button not found");
+    return;
+  }
+
+  const audioFile = phonetics.find((phonetic) => phonetic);
+
+  if (!audioFile) {
+    console.error("No audio file found in phonetics");
+    return;
+  }
+  const audio = new Audio(audioFile.audio);
+
+  audioBtn.onclick = () => {
+    audio.play().catch((error) => {
+      console.error("Error playing audio:", error);
+    });
+  };
+}
 
 /*
   Task 
    - Better interaction with Errors 
    - Add audio functionality
-   - Add new section where it will tell the user to search for a word
+   - Add new section where it will tell the user to search for a word+
+   - When the user select the word it has to show the meaning of it
 */

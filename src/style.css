@@ -12,12 +12,27 @@
 
 .small-btn {
   padding: 0.25rem 0.5rem;
-  /* Adjust padding as needed */
   font-size: 0.875rem;
-  /* Adjust font size as needed */
 }
 
+.content-box {
+  margin-top: 3%;
+  border: 2px solid black;
+  padding: 0.2rem 1.5rem;
+  border-radius: 10px;
+}
 .small-icon {
   height: 1rem;
-  /* Adjust icon size as needed */
+}
+
+@media (min-width: 768px) {
+  body {
+    width: 50%;
+    margin: auto;
+  }
+
+  html {
+    display: flex;
+    justify-content: center;
+  }
 }
